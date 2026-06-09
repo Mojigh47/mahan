@@ -146,6 +146,7 @@
     <string name="home_reports">گزارش‌ها</string>
     <string name="home_backup">پشتیبان‌گیری</string>
     <string name="home_driver_report">گزارش راننده</string>
+    <string name="order_fast_subtitle">ثبت سریع سفارش — مبلغ، مشتری و راننده</string>
 
     <!-- Per-driver time-based report -->
     <string name="driver_report_title">گزارش و حساب راننده</string>
