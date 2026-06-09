@@ -65,7 +65,7 @@
         android:layout_margin="16dp"
         android:text="@string/add_neighborhood_button"
         android:textSize="14sp"
-        app:icon="@android:drawable/ic_input_add"
+        app:icon="@drawable/ic_add"
         app:backgroundTint="@color/md_theme_primary"
         app:iconTint="@color/md_theme_on_primary"
         android:textColor="@color/md_theme_on_primary" />

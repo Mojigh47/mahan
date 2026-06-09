@@ -115,7 +115,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:text="@string/save_label"
-                    app:icon="@android:drawable/ic_menu_save"
+                    app:icon="@drawable/ic_save"
                     app:iconGravity="textStart"
                     app:iconSize="20dp" />
 

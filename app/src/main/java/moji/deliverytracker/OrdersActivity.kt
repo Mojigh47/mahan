@@ -92,7 +92,7 @@ class OrdersActivity : AppCompatActivity() {
     }
 
     private fun updateFilterButtons() {
-        val checkIcon = ContextCompat.getDrawable(this, android.R.drawable.checkbox_on_background)
+        val checkIcon = ContextCompat.getDrawable(this, R.drawable.ic_check_circle)
         btnFilterAll.icon = if (currentFilter == "all") checkIcon else null
         btnFilterSettled.icon = if (currentFilter == "settled") checkIcon else null
         btnFilterUnsettled.icon = if (currentFilter == "unsettled") checkIcon else null

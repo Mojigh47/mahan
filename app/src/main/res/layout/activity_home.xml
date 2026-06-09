@@ -63,7 +63,7 @@
             android:layout_marginBottom="16dp"
             android:text="@string/home_quick_order"
             android:textSize="16sp"
-            app:icon="@android:drawable/ic_input_add"
+            app:icon="@drawable/ic_add"
             app:iconPadding="8dp" />
 
         <!-- Stats Card -->
@@ -281,7 +281,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:layout_gravity="center"
-                            android:src="@android:drawable/ic_input_add"
+                            android:src="@drawable/ic_add"
                             android:tint="@color/card_new_order_icon" />
                     </FrameLayout>
                     <TextView
@@ -327,7 +327,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:layout_gravity="center"
-                            android:src="@android:drawable/ic_menu_agenda"
+                            android:src="@drawable/ic_receipt"
                             android:tint="@color/card_orders_icon" />
                     </FrameLayout>
                     <TextView
@@ -373,7 +373,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:layout_gravity="center"
-                            android:src="@android:drawable/ic_menu_directions"
+                            android:src="@drawable/ic_delivery"
                             android:tint="@color/card_drivers_icon" />
                     </FrameLayout>
                     <TextView
@@ -419,7 +419,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:layout_gravity="center"
-                            android:src="@android:drawable/ic_menu_myplaces"
+                            android:src="@drawable/ic_people"
                             android:tint="@color/card_customers_icon" />
                     </FrameLayout>
                     <TextView
@@ -465,7 +465,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:layout_gravity="center"
-                            android:src="@android:drawable/ic_dialog_map"
+                            android:src="@drawable/ic_map"
                             android:tint="@color/md_theme_on_tertiary_container" />
                     </FrameLayout>
                     <TextView
@@ -511,7 +511,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:layout_gravity="center"
-                            android:src="@android:drawable/ic_menu_manage"
+                            android:src="@drawable/ic_wallet"
                             android:tint="@color/card_settle_icon" />
                     </FrameLayout>
                     <TextView
@@ -557,7 +557,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:layout_gravity="center"
-                            android:src="@android:drawable/ic_menu_send"
+                            android:src="@drawable/ic_payments"
                             android:tint="@color/color_info" />
                     </FrameLayout>
                     <TextView
@@ -603,7 +603,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:layout_gravity="center"
-                            android:src="@android:drawable/ic_menu_info_details"
+                            android:src="@drawable/ic_chart"
                             android:tint="@color/md_theme_secondary" />
                     </FrameLayout>
                     <TextView
@@ -649,7 +649,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:layout_gravity="center"
-                            android:src="@android:drawable/ic_menu_save"
+                            android:src="@drawable/ic_backup"
                             android:tint="@color/md_theme_on_surface_variant" />
                     </FrameLayout>
                     <TextView

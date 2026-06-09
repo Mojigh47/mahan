@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             style="@style/Widget.Delivery.TextInput.Outlined"
-            app:startIconDrawable="@android:drawable/ic_menu_search"
+            app:startIconDrawable="@drawable/ic_search"
             app:endIconMode="clear_text">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -90,6 +90,6 @@
         android:contentDescription="@string/add_customer_desc"
         app:backgroundTint="@color/md_theme_primary"
         app:tint="@color/md_theme_on_primary"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        app:srcCompat="@drawable/ic_add" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
