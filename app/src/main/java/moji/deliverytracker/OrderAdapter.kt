@@ -56,7 +56,7 @@ class OrderAdapter(
             tvCustomer.text = order.customerName
             tvDriver.text = order.driverName
             tvAmount.text = CurrencyFormatter.formatToman(order.amount, context.getString(R.string.toman))
-            tvDateTime.text = order.dateTime
+            tvDateTime.text = PersianDate.formatStampFromDb(order.dateTime)
 
             if (order.settled) {
                 tvStatus.text = context.getString(R.string.orders_status_settled)

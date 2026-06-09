@@ -38,7 +38,7 @@ class PaymentAdapter(private val payments: MutableList<PaymentWithDriverName>) :
         holder.tvDriver.text = payment.driverName
         holder.tvAmount.text = CurrencyFormatter.formatToman(payment.amount, holder.itemView.context.getString(R.string.toman))
         holder.tvMethod.text = payment.method
-        holder.tvDate.text = payment.dateTime
+        holder.tvDate.text = PersianDate.formatStampFromDb(payment.dateTime)
     }
 
     override fun getItemCount() = payments.size
