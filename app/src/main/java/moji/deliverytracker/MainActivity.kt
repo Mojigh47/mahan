@@ -113,7 +113,7 @@ class MainActivity : AppCompatActivity() {
         if (neighborhoodName.isEmpty()) errors.add(getString(R.string.error_neighborhood_required))
         if (amountText.isEmpty()) errors.add(getString(R.string.error_amount_required))
 
-        val amount = amountText.toIntOrNull()
+        val amount = amountText.toLongOrNull()
         if (amount == null && amountText.isNotEmpty()) errors.add(getString(R.string.error_amount_number))
         if (amount != null && amount <= 0) errors.add(getString(R.string.error_amount_zero))
 

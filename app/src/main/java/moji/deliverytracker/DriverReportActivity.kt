@@ -158,7 +158,7 @@ class DriverReportActivity : AppCompatActivity() {
             val orders = db.orderDao().getByDriverBetweenWithNames(driverId, start, end)
             val paid = db.paymentDao().getTotalPaidBetweenOnce(driverId, start, end)
 
-            val totalSales = orders.sumOf { it.amount.toLong() }
+            val totalSales = orders.sumOf { it.amount }
             var totalCommission = 0L
             orders.forEach { totalCommission += MoneyCalculator.commissionAmount(it.amount, commission) }
             val net = totalSales - totalCommission
@@ -168,7 +168,7 @@ class DriverReportActivity : AppCompatActivity() {
             tvTotalSales.text = getString(R.string.settle_total_format, CurrencyFormatter.formatNumber(totalSales))
             tvCommission.text = getString(R.string.settle_commission_format, commission, CurrencyFormatter.formatNumber(totalCommission))
             tvNet.text = getString(R.string.settle_net_format, CurrencyFormatter.formatNumber(net))
-            tvPaid.text = getString(R.string.settle_paid_format, CurrencyFormatter.formatNumber(paid.toLong()))
+            tvPaid.text = getString(R.string.settle_paid_format, CurrencyFormatter.formatNumber(paid))
             tvBalance.text = getString(R.string.settle_balance_format, CurrencyFormatter.formatNumber(balance))
 
             adapter.updateList(orders.toMutableList())

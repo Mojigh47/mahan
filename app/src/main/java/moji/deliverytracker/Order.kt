@@ -48,7 +48,7 @@ data class Order(
     val driverId: Int,
     @ColumnInfo(name = "neighborhood_id")
     val neighborhoodId: Int,
-    val amount: Int,
+    val amount: Long,
     val description: String,
     @ColumnInfo(name = "date_time")
     val dateTime: String,
