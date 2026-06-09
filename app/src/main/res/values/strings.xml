@@ -44,6 +44,8 @@
     <string name="report_title">گزارش‌ها</string>
     <string name="payment_title">پرداخت وجه</string>
     <string name="payments_history_title">تاریخچه پرداخت‌ها</string>
+    <string name="payments_subtitle">همه‌ی پرداخت‌های ثبت‌شده راننده‌ها</string>
+    <string name="settle_subtitle">محاسبه‌ی مانده و ثبت پرداخت راننده</string>
 
     <string name="report_period_today">امروز</string>
     <string name="report_period_yesterday">دیروز</string>
