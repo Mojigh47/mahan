@@ -83,6 +83,10 @@ class HomeActivity : AppCompatActivity() {
             startActivity(Intent(this, ReportsActivity::class.java))
         }
 
+        findViewById<MaterialCardView>(R.id.cardDriverReport)?.setOnClickListener {
+            startActivity(Intent(this, DriverReportActivity::class.java))
+        }
+
         findViewById<MaterialCardView>(R.id.cardBackup)?.setOnClickListener {
             if (BackupHelper.hasStoragePermission(this)) {
                 performBackup()

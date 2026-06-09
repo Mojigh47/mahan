@@ -58,6 +58,8 @@
     <color name="card_payments_icon">#0284C7</color>
     <color name="card_backup_bg">#EEF2F7</color>
     <color name="card_backup_icon">#475569</color>
+    <color name="card_driver_report_bg">#FEF3C7</color>
+    <color name="card_driver_report_icon">#B45309</color>
 
     <!-- Hero header -->
     <color name="hero_grad_start">#134E4A</color>
