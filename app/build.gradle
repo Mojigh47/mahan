@@ -4,9 +4,29 @@ plugins {
 	id("org.jetbrains.kotlin.kapt") version "1.9.10"
 }
 
+// Release signing is read from app/keystore.properties when present (gitignored).
+// Expected keys: storeFile, storePassword, keyAlias, keyPassword.
+def keystorePropertiesFile = rootProject.file("app/keystore.properties")
+def keystoreProperties = new Properties()
+def hasKeystore = keystorePropertiesFile.exists()
+if (hasKeystore) {
+	keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
 android {
 	namespace = "moji.deliverytracker"
 	compileSdk = 34
+
+	signingConfigs {
+		release {
+			if (hasKeystore) {
+				storeFile file(keystoreProperties["storeFile"])
+				storePassword keystoreProperties["storePassword"]
+				keyAlias keystoreProperties["keyAlias"]
+				keyPassword keystoreProperties["keyPassword"]
+			}
+		}
+	}
 
 	aaptOptions {
 		cruncherEnabled = false
@@ -36,6 +56,15 @@ android {
 		}
 	}
 
+	lint {
+		// StringFormatMatches is a false positive under AGP 7.4.2's bundled lint,
+		// which cannot resolve Kotlin 1.9 types (arguments show as <ErrorType>).
+		// The format strings are correct (%1$d paired with Int args). Re-enable
+		// once the Android Gradle Plugin is upgraded.
+		disable "StringFormatMatches"
+		abortOnError true
+	}
+
 	buildTypes {
 		release {
 			minifyEnabled = true
@@ -44,6 +73,9 @@ android {
 					getDefaultProguardFile("proguard-android-optimize.txt"),
 					"proguard-rules.pro"
 			)
+			if (hasKeystore) {
+				signingConfig = signingConfigs.release
+			}
 		}
 	}
 }

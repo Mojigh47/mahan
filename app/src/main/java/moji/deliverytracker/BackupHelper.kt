@@ -1,4 +1,4 @@
-﻿package moji.deliverytracker
+package moji.deliverytracker
 
 import android.Manifest
 import android.content.ContentValues
@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -54,6 +55,7 @@ object BackupHelper {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     private fun exportViaMediaStore(
         context: Context,
         orders: List<OrderWithNames>,

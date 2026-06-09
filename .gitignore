@@ -23,3 +23,6 @@ app/keystore.properties
 *.apk
 *.aab
 captures/
+
+# Room exported schemas (generated during build)
+app/schemas/

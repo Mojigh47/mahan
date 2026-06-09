@@ -1,4 +1,4 @@
-﻿package moji.deliverytracker
+package moji.deliverytracker
 
 import android.content.Context
 import android.view.LayoutInflater

@@ -1,4 +1,4 @@
-﻿package moji.deliverytracker
+package moji.deliverytracker
 
 data class PaymentWithDriverName(
     val id: Int,
