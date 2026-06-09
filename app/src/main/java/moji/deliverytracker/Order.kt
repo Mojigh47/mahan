@@ -1,4 +1,4 @@
-﻿package moji.deliverytracker
+package moji.deliverytracker
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

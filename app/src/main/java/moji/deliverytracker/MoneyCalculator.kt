@@ -1,4 +1,4 @@
-﻿package moji.deliverytracker
+package moji.deliverytracker
 
 import java.math.BigDecimal
 import java.math.RoundingMode

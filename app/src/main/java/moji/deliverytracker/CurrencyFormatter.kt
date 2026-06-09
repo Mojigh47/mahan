@@ -1,4 +1,4 @@
-﻿package moji.deliverytracker
+package moji.deliverytracker
 
 import java.text.NumberFormat
 import java.util.Locale

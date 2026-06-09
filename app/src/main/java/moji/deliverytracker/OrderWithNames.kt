@@ -1,4 +1,4 @@
-﻿package moji.deliverytracker
+package moji.deliverytracker
 
 data class OrderWithNames(
     val id: Int,

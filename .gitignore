@@ -1,4 +1,28 @@
+# Gradle
 .gradle/
+build/
+app/build/
+
+# Local configuration (machine-specific)
+local.properties
+
+# Signing keys / secrets
 app/keystore.jks
 app/keystore.properties
 *.jks
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+
+# Build outputs
+*.apk
+*.aab
+captures/
+
+# Room exported schemas (generated during build)
+app/schemas/
