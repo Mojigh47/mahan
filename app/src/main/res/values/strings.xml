@@ -44,6 +44,8 @@
     <string name="report_title">گزارش‌ها</string>
     <string name="payment_title">پرداخت وجه</string>
     <string name="payments_history_title">تاریخچه پرداخت‌ها</string>
+    <string name="payments_subtitle">همه‌ی پرداخت‌های ثبت‌شده راننده‌ها</string>
+    <string name="settle_subtitle">محاسبه‌ی مانده و ثبت پرداخت راننده</string>
 
     <string name="report_period_today">امروز</string>
     <string name="report_period_yesterday">دیروز</string>
@@ -145,6 +147,20 @@
     <string name="home_payments">پرداخت‌ها</string>
     <string name="home_reports">گزارش‌ها</string>
     <string name="home_backup">پشتیبان‌گیری</string>
+    <string name="home_driver_report">گزارش راننده</string>
+    <string name="order_fast_subtitle">ثبت سریع سفارش — مبلغ، مشتری و راننده</string>
+
+    <!-- Per-driver time-based report -->
+    <string name="driver_report_title">گزارش و حساب راننده</string>
+    <string name="driver_report_hint">راننده و بازه‌ی زمانی را انتخاب کنید</string>
+    <string name="report_period_custom">بازه‌ی دلخواه</string>
+    <string name="driver_report_count_format">تعداد سفارش: %1$s</string>
+    <string name="report_from_label">از تاریخ</string>
+    <string name="report_to_label">تا تاریخ</string>
+    <string name="report_range_format">از %1$s تا %2$s</string>
+    <string name="report_pick_from">انتخاب تاریخ شروع</string>
+    <string name="report_pick_to">انتخاب تاریخ پایان</string>
+    <string name="report_empty">سفارشی در این بازه یافت نشد</string>
     <string name="backup_success">پشتیبان‌گیری در: %1$s</string>
     <string name="backup_error">خطا: %1$s</string>
     <string name="date_picker_title">انتخاب تاریخ</string>

@@ -76,7 +76,7 @@ class EditOrderActivity : AppCompatActivity() {
             val customer = etCustomer.text.toString().trim()
             val driver = etDriver.text.toString().trim()
             val neighborhood = etNeighborhood.text.toString().trim()
-            val amount = etAmount.text.toString().toIntOrNull()
+            val amount = etAmount.text.toString().toLongOrNull()
             val description = etDescription.text.toString().trim()
 
             if (customer.isEmpty() || driver.isEmpty() || neighborhood.isEmpty() || amount == null) {

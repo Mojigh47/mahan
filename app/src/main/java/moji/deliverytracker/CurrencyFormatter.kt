@@ -13,8 +13,8 @@ object CurrencyFormatter {
         }
     }
 
-    fun formatToman(amount: Int, label: String): String {
-        return "${formatNumber(amount.toLong())} $label"
+    fun formatToman(amount: Long, label: String): String {
+        return "${formatNumber(amount)} $label"
     }
 
     fun formatNumber(amount: Long): String {

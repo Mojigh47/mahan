@@ -11,19 +11,14 @@ object DateTimeUtils {
     private fun dbDateOnlyFormat(): SimpleDateFormat =
         SimpleDateFormat("yyyy-MM-dd", Locale.US)
 
-    private fun displayDateFormat(): SimpleDateFormat =
-        SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
-
-    private fun displayTimeFormat(): SimpleDateFormat =
-        SimpleDateFormat("HH:mm", Locale.getDefault())
-
     fun nowDb(): String = dbDateTimeFormat().format(Date())
 
     fun formatDb(date: Date): String = dbDateTimeFormat().format(date)
 
     fun todayPrefixDb(): String = dbDateOnlyFormat().format(Date())
 
-    fun formatDisplayDate(date: Date): String = displayDateFormat().format(date)
+    // Display is Shamsi (Jalali) with Persian digits; storage stays Gregorian ISO.
+    fun formatDisplayDate(date: Date): String = PersianDate.formatDate(date)
 
-    fun formatDisplayTime(date: Date): String = displayTimeFormat().format(date)
+    fun formatDisplayTime(date: Date): String = PersianDate.formatTime(date)
 }

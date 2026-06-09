@@ -10,11 +10,11 @@ enum class ReportPeriod {
 
 data class ReportSummary(
     val totalOrders: Int,
-    val totalSales: Int,
-    val totalCommission: Int,
-    val netIncome: Int,
-    val settled: Int,
-    val unsettled: Int
+    val totalSales: Long,
+    val totalCommission: Long,
+    val netIncome: Long,
+    val settled: Long,
+    val unsettled: Long
 )
 
 object ReportCalculator {
@@ -49,7 +49,7 @@ object ReportCalculator {
 
     fun calculateSummary(orders: List<Order>, drivers: List<Driver>): ReportSummary {
         val commissionByDriver = drivers.associate { it.id to it.commission }
-        var totalCommission = 0
+        var totalCommission = 0L
 
         orders.forEach { order ->
             val commission = commissionByDriver[order.driverId] ?: 0f

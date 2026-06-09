@@ -22,7 +22,7 @@ data class Payment(
     val id: Int = 0,
     @ColumnInfo(name = "driver_id")
     val driverId: Int,
-    val amount: Int,
+    val amount: Long,
     @ColumnInfo(name = "payment_method")
     val method: String,
     @ColumnInfo(name = "date_time")

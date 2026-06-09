@@ -37,7 +37,7 @@ class SettleActivity : AppCompatActivity() {
     private var driverJob: Job? = null
     private var hasPromptedSettle = false
     private var driverFirstLoad = true
-    private var currentBalance: Int = 0
+    private var currentBalance: Long = 0L
     private var lastSettlementTime: String = "0000-01-01 00:00:00"
     private var isLoadingDriver = false
 
@@ -156,11 +156,11 @@ class SettleActivity : AppCompatActivity() {
                 val balance = MoneyCalculator.balance(netIncome, totalPaid)
                 currentBalance = balance
 
-                tvTotal.text = getString(R.string.settle_total_format, CurrencyFormatter.formatNumber(total.toLong()))
-                tvCommission.text = getString(R.string.settle_commission_format, commission, CurrencyFormatter.formatNumber(commissionAmount.toLong()))
-                tvNet.text = getString(R.string.settle_net_format, CurrencyFormatter.formatNumber(netIncome.toLong()))
-                tvPaid.text = getString(R.string.settle_paid_format, CurrencyFormatter.formatNumber(totalPaid.toLong()))
-                tvBalance.text = getString(R.string.settle_balance_format, CurrencyFormatter.formatNumber(balance.toLong()))
+                tvTotal.text = getString(R.string.settle_total_format, CurrencyFormatter.formatNumber(total))
+                tvCommission.text = getString(R.string.settle_commission_format, commission, CurrencyFormatter.formatNumber(commissionAmount))
+                tvNet.text = getString(R.string.settle_net_format, CurrencyFormatter.formatNumber(netIncome))
+                tvPaid.text = getString(R.string.settle_paid_format, CurrencyFormatter.formatNumber(totalPaid))
+                tvBalance.text = getString(R.string.settle_balance_format, CurrencyFormatter.formatNumber(balance))
                 tvBalance.setTextColor(
                     ContextCompat.getColor(
                         this@SettleActivity,
@@ -192,7 +192,7 @@ class SettleActivity : AppCompatActivity() {
             .setTitle(getString(R.string.payment_title))
             .setView(dialogView)
             .setPositiveButton(getString(R.string.action_save)) { _, _ ->
-                val amount = etAmount.text.toString().toIntOrNull() ?: 0
+                val amount = etAmount.text.toString().toLongOrNull() ?: 0L
                 if (amount <= 0) {
                     Toast.makeText(this, getString(R.string.invalid_amount), Toast.LENGTH_SHORT).show()
                     return@setPositiveButton
@@ -217,7 +217,7 @@ class SettleActivity : AppCompatActivity() {
                     if (success) {
                         Toast.makeText(this@SettleActivity, getString(R.string.payment_success), Toast.LENGTH_SHORT).show()
                         if (amount == currentBalance) {
-                            showSettleDialog(actDriver.text.toString(), 0)
+                            showSettleDialog(actDriver.text.toString(), 0L)
                         }
                     } else {
                         Toast.makeText(this@SettleActivity, getString(R.string.payment_error), Toast.LENGTH_SHORT).show()
@@ -228,10 +228,10 @@ class SettleActivity : AppCompatActivity() {
             .show()
     }
 
-    private fun showSettleDialog(driver: String, amount: Int) {
+    private fun showSettleDialog(driver: String, amount: Long) {
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.settle_dialog_title))
-            .setMessage(getString(R.string.settle_dialog_message, driver, CurrencyFormatter.formatNumber(amount.toLong())))
+            .setMessage(getString(R.string.settle_dialog_message, driver, CurrencyFormatter.formatNumber(amount)))
             .setPositiveButton(getString(R.string.action_yes)) { _, _ ->
                 AlertDialog.Builder(this)
                     .setTitle(getString(R.string.settle_final_title))

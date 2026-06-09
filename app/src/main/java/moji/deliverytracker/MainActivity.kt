@@ -7,7 +7,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -82,17 +81,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun openDatePicker() {
-        val picker = MaterialDatePicker.Builder.datePicker()
-            .setTitleText(getString(R.string.date_picker_title))
-            .build()
-
-        picker.addOnPositiveButtonClickListener { selection ->
-            val selected = Date(selection)
-            selectedDate = DateTimeUtils.formatDb(selected)
-            btnSelectDate.text = getString(R.string.date_selected_format, DateTimeUtils.formatDisplayDate(selected))
+        PersianDatePickerDialog.show(
+            context = this,
+            title = getString(R.string.date_picker_title)
+        ) { j ->
+            // Combine the chosen Shamsi day with the phone's current wall-clock time
+            // so the registration time is preserved.
+            val (gy, gm, gd) = PersianDate.jalaliToGregorian(j.year, j.month, j.day)
+            val now = Calendar.getInstance()
+            val cal = Calendar.getInstance().apply {
+                set(gy, gm - 1, gd,
+                    now.get(Calendar.HOUR_OF_DAY),
+                    now.get(Calendar.MINUTE),
+                    now.get(Calendar.SECOND))
+            }
+            selectedDate = DateTimeUtils.formatDb(cal.time)
+            btnSelectDate.text = getString(R.string.date_selected_format, DateTimeUtils.formatDisplayDate(cal.time))
         }
-
-        picker.show(supportFragmentManager, "DATE_PICKER")
     }
 
     private fun submitOrder() {
@@ -108,7 +113,7 @@ class MainActivity : AppCompatActivity() {
         if (neighborhoodName.isEmpty()) errors.add(getString(R.string.error_neighborhood_required))
         if (amountText.isEmpty()) errors.add(getString(R.string.error_amount_required))
 
-        val amount = amountText.toIntOrNull()
+        val amount = amountText.toLongOrNull()
         if (amount == null && amountText.isNotEmpty()) errors.add(getString(R.string.error_amount_number))
         if (amount != null && amount <= 0) errors.add(getString(R.string.error_amount_zero))
 

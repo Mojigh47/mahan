@@ -1,6 +1,6 @@
 package moji.deliverytracker
 
 data class OrderSummary(
-    val total: Int,
+    val total: Long,
     val count: Int
 )

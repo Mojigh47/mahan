@@ -77,6 +77,23 @@ interface OrderDao {
         LEFT JOIN customers c ON c.id = o.customer_id
         LEFT JOIN drivers d ON d.id = o.driver_id
         LEFT JOIN neighborhoods n ON n.id = o.neighborhood_id
+        WHERE o.driver_id = :driverId AND o.date_time BETWEEN :start AND :end
+        ORDER BY o.date_time DESC
+        """
+    )
+    suspend fun getByDriverBetweenWithNames(driverId: Int, start: String, end: String): List<OrderWithNames>
+
+    @Query(
+        """
+        SELECT o.id, o.customer_id AS customerId, o.driver_id AS driverId, o.neighborhood_id AS neighborhoodId,
+               o.amount, o.description, o.date_time AS dateTime, o.settled, o.settled_at AS settledAt, o.status,
+               COALESCE(c.name, '__UNKNOWN__') AS customerName,
+               COALESCE(d.name, '__UNKNOWN__') AS driverName,
+               COALESCE(n.name, '__UNKNOWN__') AS neighborhoodName
+        FROM orders o
+        LEFT JOIN customers c ON c.id = o.customer_id
+        LEFT JOIN drivers d ON d.id = o.driver_id
+        LEFT JOIN neighborhoods n ON n.id = o.neighborhood_id
         WHERE o.driver_id = :driverId AND o.settled = 0
         ORDER BY o.id DESC
         """
