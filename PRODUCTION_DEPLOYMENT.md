@@ -13,6 +13,8 @@
 - ✅ Constant-time password comparison برای جلوگیری از Timing Attack
 - ✅ CSV Injection Prevention در خروجی‌های بک‌آپ
 - ✅ ProGuard/R8 Obfuscation فعال برای Release Build
+- ✅ **احراز هویت سراسری**: تمامی صفحات مالی (`Home`, `Main`, `Settle`, `Reports`) به `BaseAuthActivity` مجهز شدند.
+- ✅ **یکپارچگی تراکنش‌ها**: عملیات تسویه و پرداخت در سطح دیتابیس اتمیک شدند.
 
 ### ب) کیفیت کد (Code Quality)
 - ✅ تمامی محاسبات مالی از `BigDecimal` استفاده می‌کنند

@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseAuthActivity() {
 
     private lateinit var db: AppDatabase
     private lateinit var etCustomer: AutoCompleteTextView
@@ -24,14 +24,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnSelectDate: MaterialButton
     private var selectedDate: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onAuthenticationSuccess() {
         setContentView(R.layout.activity_main)
 
         supportActionBar?.title = getString(R.string.title_new_order)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        db = AppDatabase.getInstance(this)
         NotificationHelper.createNotificationChannel(this)
         initViews()
         setupAutoComplete()

@@ -17,9 +17,7 @@ import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
 
-class DriverReportActivity : AppCompatActivity() {
-
-    private lateinit var db: AppDatabase
+class DriverReportActivity : BaseAuthActivity() {
     private lateinit var actDriver: MaterialAutoCompleteTextView
     private lateinit var chipPeriod: ChipGroup
     private lateinit var rowCustomRange: View
@@ -39,14 +37,12 @@ class DriverReportActivity : AppCompatActivity() {
     private var fromJalali: PersianDate.Jalali = PersianDate.today()
     private var toJalali: PersianDate.Jalali = PersianDate.today()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onAuthenticationSuccess() {
         setContentView(R.layout.activity_driver_report)
 
         supportActionBar?.title = getString(R.string.driver_report_title)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        db = AppDatabase.getInstance(this)
         bindViews()
         setupDriverDropdown()
         setupPeriod()

@@ -17,10 +17,8 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.*
 
-class HomeActivity : AppCompatActivity() {
-    private lateinit var db: AppDatabase
-    private val dateTimeHandler = android.os.Handler(android.os.Looper.getMainLooper())
-    private lateinit var dateTimeRunnable: Runnable
+class HomeActivity : BaseAuthActivity() {
+    private var dateTimeJob: kotlinx.coroutines.Job? = null
 
     private val storagePermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -36,13 +34,9 @@ class HomeActivity : AppCompatActivity() {
         ActivityResultContracts.RequestPermission()
     ) { _ -> /* No action needed, just request */ }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onAuthenticationSuccess() {
         setContentView(R.layout.activity_home)
-
         supportActionBar?.title = getString(R.string.home_app_title)
-
-        db = AppDatabase.getInstance(this)
 
         requestNotificationPermissionIfNeeded()
         startDateTimeClock()
@@ -88,7 +82,7 @@ class HomeActivity : AppCompatActivity() {
         }
 
         findViewById<MaterialCardView>(R.id.cardBackup)?.setOnClickListener {
-            if (BackupHelper.hasStoragePermission(this)) {
+            if (SecureBackupHelper.hasStoragePermission(this)) {
                 performBackup()
             } else {
                 storagePermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -100,23 +94,23 @@ class HomeActivity : AppCompatActivity() {
 
     private fun startDateTimeClock() {
         val tvDateTime = findViewById<TextView>(R.id.tvDateTime)
-        dateTimeRunnable = object : Runnable {
-            override fun run() {
+        dateTimeJob?.cancel()
+        dateTimeJob = lifecycleScope.launch {
+            while (true) {
                 val now = Date()
                 tvDateTime.text = getString(
                     R.string.home_datetime_format,
                     DateTimeUtils.formatDisplayDate(now),
                     DateTimeUtils.formatDisplayTime(now)
                 )
-                dateTimeHandler.postDelayed(this, 30_000L)
+                kotlinx.coroutines.delay(30_000L)
             }
         }
-        dateTimeRunnable.run()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        dateTimeHandler.removeCallbacks(dateTimeRunnable)
+        dateTimeJob?.cancel()
     }
 
     private fun requestNotificationPermissionIfNeeded() {

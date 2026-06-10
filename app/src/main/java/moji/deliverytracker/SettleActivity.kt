@@ -19,9 +19,7 @@ import kotlinx.coroutines.launch
 import java.util.*
 import androidx.core.content.ContextCompat
 
-class SettleActivity : AppCompatActivity() {
-
-    private lateinit var db: AppDatabase
+class SettleActivity : BaseAuthActivity() {
     private lateinit var actDriver: AutoCompleteTextView
     private lateinit var btnLoad: MaterialButton
     private lateinit var rvOrders: RecyclerView
@@ -41,31 +39,13 @@ class SettleActivity : AppCompatActivity() {
     private var lastSettlementTime: String = "0000-01-01 00:00:00"
     private var isLoadingDriver = false
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onAuthenticationSuccess() {
         setContentView(R.layout.activity_settle)
 
         supportActionBar?.title = getString(R.string.settle_title)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        SecurityHelper.migrateIfNeeded(this)
-
-        if (SecurityHelper.isLockedOut(this)) {
-            Toast.makeText(this, getString(R.string.auth_locked), Toast.LENGTH_LONG).show()
-            finish()
-            return
-        }
-
-        if (!SecurityHelper.isAuthenticated(this)) {
-            showAuthDialog()
-            return
-        }
-
-        if (SecurityHelper.needsPasswordChange(this)) {
-            showChangePasswordDialog()
-        } else {
-            initializeViews()
-        }
+        initializeViews()
     }
 
     private fun initializeViews() {
@@ -207,19 +187,26 @@ class SettleActivity : AppCompatActivity() {
                     else -> getString(R.string.payment_cash)
                 }
                 lifecycleScope.launch {
-                    val payment = Payment(
-                        driverId = currentDriverId,
-                        amount = amount,
-                        method = method,
-                        dateTime = DateTimeUtils.nowDb()
-                    )
-                    val success = db.paymentDao().insert(payment) != -1L
-                    if (success) {
+                    try {
+                        db.withTransaction {
+                            val payment = Payment(
+                                driverId = currentDriverId,
+                                amount = amount,
+                                method = method,
+                                dateTime = DateTimeUtils.nowDb()
+                            )
+                            val paymentId = db.paymentDao().insert(payment)
+                            if (paymentId == -1L) throw Exception("Payment insert failed")
+                            
+                            // If full balance is paid, we can optionally auto-settle orders in the same transaction
+                            // but usually it's better to keep them separate unless business logic requires it.
+                            // Here we keep it simple: payment is recorded.
+                        }
                         Toast.makeText(this@SettleActivity, getString(R.string.payment_success), Toast.LENGTH_SHORT).show()
                         if (amount == currentBalance) {
                             showSettleDialog(actDriver.text.toString(), 0L)
                         }
-                    } else {
+                    } catch (e: Exception) {
                         Toast.makeText(this@SettleActivity, getString(R.string.payment_error), Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -238,11 +225,12 @@ class SettleActivity : AppCompatActivity() {
                     .setMessage(getString(R.string.settle_final_message))
                     .setPositiveButton(getString(R.string.action_yes)) { _, _ ->
                         lifecycleScope.launch {
-                            val success = db.orderDao()
-                                .updateSettledForDriver(currentDriverId, true, DateTimeUtils.nowDb()) > 0
-                            if (success) {
+                            try {
+                                db.withTransaction {
+                                    db.orderDao().updateSettledForDriver(currentDriverId, true, DateTimeUtils.nowDb())
+                                }
                                 Toast.makeText(this@SettleActivity, getString(R.string.settle_success), Toast.LENGTH_SHORT).show()
-                            } else {
+                            } catch (e: Exception) {
                                 Toast.makeText(this@SettleActivity, getString(R.string.settle_error), Toast.LENGTH_SHORT).show()
                             }
                         }
@@ -254,70 +242,7 @@ class SettleActivity : AppCompatActivity() {
             .show()
     }
 
-    private fun showAuthDialog() {
-        val input = EditText(this)
-        input.hint = getString(R.string.auth_hint)
-        input.inputType = android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD
 
-        AlertDialog.Builder(this)
-            .setTitle(getString(R.string.auth_title))
-            .setMessage(getString(R.string.auth_message))
-            .setView(input)
-            .setPositiveButton(getString(R.string.action_yes)) { _, _ ->
-                val password = input.text.toString()
-                if (SecurityHelper.verifyPassword(this, password)) {
-                    SecurityHelper.clearFailedAttempts(this)
-                    SecurityHelper.setAuthenticated(this, true)
-                    if (SecurityHelper.needsPasswordChange(this)) {
-                        showChangePasswordDialog()
-                    } else {
-                        initializeViews()
-                    }
-                } else {
-                    SecurityHelper.registerFailedAttempt(this)
-                    if (SecurityHelper.isLockedOut(this)) {
-                        Toast.makeText(this, getString(R.string.auth_locked), Toast.LENGTH_LONG).show()
-                        finish()
-                        return@setPositiveButton
-                    }
-                    Toast.makeText(this, getString(R.string.auth_wrong), Toast.LENGTH_SHORT).show()
-                    finish()
-                }
-            }
-            .setNegativeButton(getString(R.string.action_cancel)) { _, _ -> finish() }
-            .setCancelable(false)
-            .show()
-    }
-
-    private fun showChangePasswordDialog() {
-        val view = layoutInflater.inflate(R.layout.dialog_change_password, null)
-        val etNew = view.findViewById<TextInputEditText>(R.id.etNewPassword)
-        val etConfirm = view.findViewById<TextInputEditText>(R.id.etConfirmPassword)
-
-        AlertDialog.Builder(this)
-            .setTitle(getString(R.string.auth_change_title))
-            .setMessage(getString(R.string.auth_change_message))
-            .setView(view)
-            .setPositiveButton(getString(R.string.action_save)) { _, _ ->
-                val newPass = etNew.text?.toString()?.trim().orEmpty()
-                val confirm = etConfirm.text?.toString()?.trim().orEmpty()
-                if (newPass.length < 4) {
-                    Toast.makeText(this, getString(R.string.auth_change_short), Toast.LENGTH_SHORT).show()
-                    showChangePasswordDialog()
-                    return@setPositiveButton
-                }
-                if (newPass != confirm) {
-                    Toast.makeText(this, getString(R.string.auth_change_mismatch), Toast.LENGTH_SHORT).show()
-                    showChangePasswordDialog()
-                    return@setPositiveButton
-                }
-                SecurityHelper.setPassword(this, newPass)
-                SecurityHelper.markPasswordChanged(this)
-                initializeViews()
-            }
-            .setCancelable(false)
-            .show()
-    }
 
     override fun onDestroy() {
         super.onDestroy()
