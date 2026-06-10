@@ -187,27 +187,25 @@ class SettleActivity : BaseAuthActivity() {
                     else -> getString(R.string.payment_cash)
                 }
                 lifecycleScope.launch {
-                    try {
-                        db.withTransaction {
-                            val payment = Payment(
-                                driverId = currentDriverId,
-                                amount = amount,
-                                method = method,
-                                dateTime = DateTimeUtils.nowDb()
-                            )
-                            val paymentId = db.paymentDao().insert(payment)
-                            if (paymentId == -1L) throw Exception("Payment insert failed")
-                            
-                            // If full balance is paid, we can optionally auto-settle orders in the same transaction
-                            // but usually it's better to keep them separate unless business logic requires it.
-                            // Here we keep it simple: payment is recorded.
+                    val result = TransactionalSettlementHelper.recordPaymentWithOptionalSettle(
+                        db,
+                        currentDriverId,
+                        amount,
+                        method,
+                        DateTimeUtils.nowDb(),
+                        autoSettle = false
+                    )
+
+                    when (result) {
+                        is TransactionalSettlementHelper.Result.Success -> {
+                            Toast.makeText(this@SettleActivity, getString(R.string.payment_success), Toast.LENGTH_SHORT).show()
+                            if (amount == currentBalance) {
+                                showSettleDialog(actDriver.text.toString(), 0L)
+                            }
                         }
-                        Toast.makeText(this@SettleActivity, getString(R.string.payment_success), Toast.LENGTH_SHORT).show()
-                        if (amount == currentBalance) {
-                            showSettleDialog(actDriver.text.toString(), 0L)
+                        is TransactionalSettlementHelper.Result.Failure -> {
+                            Toast.makeText(this@SettleActivity, "Error: ${result.error}", Toast.LENGTH_SHORT).show()
                         }
-                    } catch (e: Exception) {
-                        Toast.makeText(this@SettleActivity, getString(R.string.payment_error), Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -225,13 +223,19 @@ class SettleActivity : BaseAuthActivity() {
                     .setMessage(getString(R.string.settle_final_message))
                     .setPositiveButton(getString(R.string.action_yes)) { _, _ ->
                         lifecycleScope.launch {
-                            try {
-                                db.withTransaction {
-                                    db.orderDao().updateSettledForDriver(currentDriverId, true, DateTimeUtils.nowDb())
+                            val result = TransactionalSettlementHelper.settleAllOrdersForDriver(
+                                db,
+                                currentDriverId,
+                                DateTimeUtils.nowDb()
+                            )
+
+                            when (result) {
+                                is TransactionalSettlementHelper.Result.Success -> {
+                                    Toast.makeText(this@SettleActivity, getString(R.string.settle_success), Toast.LENGTH_SHORT).show()
                                 }
-                                Toast.makeText(this@SettleActivity, getString(R.string.settle_success), Toast.LENGTH_SHORT).show()
-                            } catch (e: Exception) {
-                                Toast.makeText(this@SettleActivity, getString(R.string.settle_error), Toast.LENGTH_SHORT).show()
+                                is TransactionalSettlementHelper.Result.Failure -> {
+                                    Toast.makeText(this@SettleActivity, "Error: ${result.error}", Toast.LENGTH_SHORT).show()
+                                }
                             }
                         }
                     }

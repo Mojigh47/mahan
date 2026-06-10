@@ -82,7 +82,7 @@ class HomeActivity : BaseAuthActivity() {
         }
 
         findViewById<MaterialCardView>(R.id.cardBackup)?.setOnClickListener {
-            if (SecureBackupHelper.hasStoragePermission(this)) {
+            if (EncryptedBackupHelper.hasStoragePermission(this)) {
                 performBackup()
             } else {
                 storagePermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -125,7 +125,7 @@ class HomeActivity : BaseAuthActivity() {
 
     private fun performBackup() {
         lifecycleScope.launch {
-            val (success, message) = BackupHelper.exportToCSV(this@HomeActivity, db)
+            val (success, message) = EncryptedBackupHelper.exportSecureBackup(this@HomeActivity, db)
             val text = if (success) {
                 getString(R.string.backup_success, message)
             } else {
