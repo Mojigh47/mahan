@@ -11,22 +11,19 @@ import com.facebook.shimmer.ShimmerFrameLayout
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class PaymentsActivity : AppCompatActivity() {
-    private lateinit var db: AppDatabase
+class PaymentsActivity : BaseAuthActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var tvEmpty: TextView
     private lateinit var adapter: PaymentAdapter
     private lateinit var shimmer: ShimmerFrameLayout
     private var firstLoad = true
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onAuthenticationSuccess() {
         setContentView(R.layout.activity_payments)
 
         supportActionBar?.title = getString(R.string.payments_history_title)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        db = AppDatabase.getInstance(this)
         recyclerView = findViewById(R.id.recyclerPayments)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.setHasFixedSize(true)

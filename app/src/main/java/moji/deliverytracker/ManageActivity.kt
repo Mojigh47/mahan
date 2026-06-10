@@ -14,22 +14,19 @@ import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class ManageActivity : AppCompatActivity() {
-    private lateinit var db: AppDatabase
+class ManageActivity : BaseAuthActivity() {
     private lateinit var listView: ListView
     private lateinit var adapter: ArrayAdapter<String>
     private lateinit var shimmer: ShimmerFrameLayout
     private val neighborhoods = mutableListOf<String>()
     private var firstLoad = true
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onAuthenticationSuccess() {
         setContentView(R.layout.activity_manage)
 
         supportActionBar?.title = getString(R.string.neighborhoods_title)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        db = AppDatabase.getInstance(this)
         listView = findViewById(R.id.listNeighborhoods)
         shimmer = findViewById(R.id.shimmerNeighborhoods)
 

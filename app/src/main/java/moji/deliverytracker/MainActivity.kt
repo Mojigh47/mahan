@@ -141,18 +141,26 @@ class MainActivity : BaseAuthActivity() {
                 settled = false,
                 settledAt = null
             )
-            val result = db.orderDao().insert(order)
-            btnSubmit.isEnabled = true
-            if (result != -1L) {
-                NotificationHelper.showOrderNotification(
-                    this@MainActivity,
-                    getString(R.string.order_new_title),
-                    getString(R.string.order_new_message, customerName)
-                )
-                Toast.makeText(this@MainActivity, getString(R.string.order_saved_success), Toast.LENGTH_SHORT).show()
-                clearForm()
-            } else {
-                Toast.makeText(this@MainActivity, getString(R.string.order_saved_error), Toast.LENGTH_SHORT).show()
+            try {
+                var result = -1L
+                db.withTransaction {
+                    result = db.orderDao().insert(order)
+                }
+                btnSubmit.isEnabled = true
+                if (result != -1L) {
+                    NotificationHelper.showOrderNotification(
+                        this@MainActivity,
+                        getString(R.string.order_new_title),
+                        getString(R.string.order_new_message, customerName)
+                    )
+                    Toast.makeText(this@MainActivity, getString(R.string.order_saved_success), Toast.LENGTH_SHORT).show()
+                    clearForm()
+                } else {
+                    Toast.makeText(this@MainActivity, getString(R.string.order_saved_error), Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                btnSubmit.isEnabled = true
+                Toast.makeText(this@MainActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }

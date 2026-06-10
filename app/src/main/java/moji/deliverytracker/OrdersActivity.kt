@@ -17,9 +17,7 @@ import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class OrdersActivity : AppCompatActivity() {
-
-    private lateinit var db: AppDatabase
+class OrdersActivity : BaseAuthActivity() {
     private lateinit var rvOrders: RecyclerView
     private lateinit var etSearch: TextInputEditText
     private lateinit var tvEmptyState: TextView
@@ -32,14 +30,12 @@ class OrdersActivity : AppCompatActivity() {
     private var currentFilter = "all"
     private var firstLoad = true
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onAuthenticationSuccess() {
         setContentView(R.layout.activity_orders)
 
         supportActionBar?.title = getString(R.string.orders_list_title)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        db = AppDatabase.getInstance(this)
         rvOrders = findViewById(R.id.rvOrders)
         etSearch = findViewById(R.id.etSearch)
         tvEmptyState = findViewById(R.id.tvEmptyState)

@@ -10,9 +10,7 @@ import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class EditOrderActivity : AppCompatActivity() {
-
-    private lateinit var db: AppDatabase
+class EditOrderActivity : BaseAuthActivity() {
     private var orderId: Int = -1
     private var currentOrder: OrderWithNames? = null
 
@@ -24,11 +22,9 @@ class EditOrderActivity : AppCompatActivity() {
     private lateinit var btnSave: MaterialButton
     private lateinit var btnDelete: MaterialButton
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onAuthenticationSuccess() {
         setContentView(R.layout.activity_edit_order)
 
-        db = AppDatabase.getInstance(this)
         orderId = intent.extras?.getInt("orderId") ?: -1
 
         if (orderId == -1) {
@@ -118,13 +114,16 @@ class EditOrderActivity : AppCompatActivity() {
                     settledAt = existing.settledAt,
                     status = existing.status
                 )
-                val success = db.orderDao().update(order) > 0
-                btnSave.isEnabled = true
-                if (success) {
+                try {
+                    db.withTransaction {
+                        db.orderDao().update(order)
+                    }
+                    btnSave.isEnabled = true
                     Toast.makeText(this@EditOrderActivity, getString(R.string.order_updated), Toast.LENGTH_SHORT).show()
                     finish()
-                } else {
-                    Toast.makeText(this@EditOrderActivity, getString(R.string.order_update_error), Toast.LENGTH_SHORT).show()
+                } catch (e: Exception) {
+                    btnSave.isEnabled = true
+                    Toast.makeText(this@EditOrderActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -135,12 +134,14 @@ class EditOrderActivity : AppCompatActivity() {
                 .setMessage(getString(R.string.confirm_delete_message))
                 .setPositiveButton(getString(R.string.action_yes)) { _, _ ->
                     lifecycleScope.launch {
-                        val success = db.orderDao().deleteById(orderId) > 0
-                        if (success) {
+                        try {
+                            db.withTransaction {
+                                db.orderDao().deleteById(orderId)
+                            }
                             Toast.makeText(this@EditOrderActivity, getString(R.string.delete_success), Toast.LENGTH_SHORT).show()
                             finish()
-                        } else {
-                            Toast.makeText(this@EditOrderActivity, getString(R.string.order_delete_error), Toast.LENGTH_SHORT).show()
+                        } catch (e: Exception) {
+                            Toast.makeText(this@EditOrderActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }

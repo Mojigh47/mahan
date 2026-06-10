@@ -15,9 +15,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import java.util.*
 
-class ReportsActivity : AppCompatActivity() {
-
-    private lateinit var db: AppDatabase
+class ReportsActivity : BaseAuthActivity() {
     private lateinit var btnToday: MaterialButton
     private lateinit var btnWeek: MaterialButton
     private lateinit var btnMonth: MaterialButton
@@ -33,14 +31,12 @@ class ReportsActivity : AppCompatActivity() {
 
     private val periodFlow = MutableStateFlow(ReportPeriod.TODAY)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onAuthenticationSuccess() {
         setContentView(R.layout.activity_reports)
 
         supportActionBar?.title = getString(R.string.report_title)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        db = AppDatabase.getInstance(this)
         initViews()
         setupClickListeners()
         observeReports()
