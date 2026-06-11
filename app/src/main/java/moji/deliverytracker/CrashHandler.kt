@@ -31,7 +31,10 @@ class CrashHandler(private val context: Context) : Thread.UncaughtExceptionHandl
             }
 
             // Give the user time to see the dialog before crashing
-            Thread.sleep(1000)
+            // Using Handler instead of Thread.sleep to avoid blocking
+            android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+                // Dialog will be shown by the system
+            }, 1000)
         } catch (e: Exception) {
             Log.e("CrashHandler", "Error in crash handler", e)
         }
