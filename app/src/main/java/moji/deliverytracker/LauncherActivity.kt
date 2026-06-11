@@ -18,6 +18,9 @@ class LauncherActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
+        // Initialize global crash handler to prevent black screens
+        CrashHandler.install(this)
+        
         // Initialize security system
         SecurityHelper.migrateIfNeeded(this)
 
